@@ -4,5 +4,4 @@ import Hero from "../components/common/Hero.vue";
 
 <template>
   <Hero />
-  <div class="h-dvh bg-black"></div>
 </template>

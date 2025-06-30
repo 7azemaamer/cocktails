@@ -1,13 +1,44 @@
 <script setup>
 import gsap from "gsap";
 import { SplitText } from "gsap/all";
-import { onMounted } from "vue";
+import { nextTick, onMounted, ref } from "vue";
+import { useMediaQuery } from "@vueuse/core";
 
-onMounted(() => {
+const videoRef = ref(null);
+const isMobile = useMediaQuery("(max-width: 767px)");
+
+onMounted(async () => {
+  await nextTick();
+  /* ================
+   * Video Animations vars
+   ================ */
+
+  const startValue = isMobile.value ? "top 50%" : "center 60%";
+  const endValue = isMobile.value ? "120% top" : "bottom top";
+
+  const vtl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "video",
+      start: startValue,
+      end: endValue,
+      scrub: true,
+      pin: true,
+    },
+  });
+  videoRef.value.onloadedmetadata = () => {
+    vtl.to(videoRef.value, {
+      currentTime: videoRef.value.duration,
+    });
+  };
+  /* ================
+   * Text Animations
+   ================ */
   const heroSplit = new SplitText(".title", { type: "chars, words" });
   const paraSplit = new SplitText(".subtitle", { type: "lines" });
+
   heroSplit.chars.forEach((char) => char.classList.add("text-gradient"));
 
+  // char slide up animation
   gsap.from(heroSplit.chars, {
     yPercent: 100,
     duration: 1.8,
@@ -15,6 +46,7 @@ onMounted(() => {
     ease: "expo.out",
   });
 
+  // line slide up animation
   gsap.from(paraSplit.lines, {
     opacity: 0,
     yPercent: 100,
@@ -24,6 +56,7 @@ onMounted(() => {
     delay: 1,
   });
 
+  // leafs moves when scroll up and down
   gsap
     .timeline({
       scrollTrigger: {
@@ -67,4 +100,13 @@ onMounted(() => {
       </div>
     </div>
   </section>
+  <div class="video absolute inset-0">
+    <video
+      ref="videoRef"
+      src="/videos/output.mp4"
+      muted
+      preload="auto"
+      playsinline
+    />
+  </div>
 </template>
