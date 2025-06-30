@@ -95,7 +95,7 @@ onMounted(async () => {
             creative flair, and timeless recipes — designed to delight your
             senses.
           </p>
-          <a href="#coctails"> View Cocktails </a>
+          <a href="#cocktails"> View Cocktails </a>
         </div>
       </div>
     </div>
